@@ -6,6 +6,8 @@ namespace UsdaCosmosJson
     {
         public string Id { get; set; }
 
+        public string FoodGroupId { get; set; }
+
         public string ShortDescription { get; set; }
 
         public string Description { get; set; }
@@ -16,7 +18,8 @@ namespace UsdaCosmosJson
             {
                 Id = foodItem.FoodId,
                 ShortDescription = foodItem.ShortDescription,
-                Description = foodItem.Description
+                Description = foodItem.Description,
+                FoodGroupId = foodItem.FoodGroupId
             };
         }
     }
