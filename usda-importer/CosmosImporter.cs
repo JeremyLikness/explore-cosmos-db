@@ -32,17 +32,17 @@ namespace UsdaCosmos
         }
         public async Task ImportGroups(IConfigurationRoot config, FoodGroup[] groups)
         {
-            await this.Import<FoodGroup>(config, "foodGroups", groups);
+            await this.Import<FoodGroup>(config, Collections.GetCollectionName<FoodGroup>(), groups);
         }
 
         public async Task ImportDefinitions(IConfigurationRoot config, NutrientDefinition[] definitions)
         {
-            await this.Import<NutrientDefinition>(config, "nutrientDefinitions", definitions);
+            await this.Import<NutrientDefinition>(config, Collections.GetCollectionName<NutrientDefinition>(), definitions);
         }
 
         public async Task ImportFood(IConfigurationRoot config, FoodItem[] foods)
         {
-            await this.Import<FoodItem>(config, "foodItems", foods);
+            await this.Import<FoodItem>(config, Collections.GetCollectionName<FoodItem>(), foods);
         }
     }
 }

@@ -27,7 +27,7 @@ namespace usda_web_api.Controllers
         {
             var client = new CosmosClient();
             var db = client.ConnectAndGetDatabase(this.configuration);
-            var query = db.GetCollection<FoodGroup>("foodGroups").AsQueryable();
+            var query = db.GetCollection<FoodGroup>(Collections.GetCollectionName<FoodGroup>()).AsQueryable();
             var list = (await query.ToListAsync()).OrderBy(fg => fg.Code);
 
             return list.Select(fg => FoodGroupJson.FromFoodGroup(fg));
@@ -44,13 +44,13 @@ namespace usda_web_api.Controllers
             }
             var client = new CosmosClient();
             var db = client.ConnectAndGetDatabase(this.configuration);
-            var query = await db.GetCollection<FoodGroup>("foodGroups").FindAsync(fg => fg.Code == code);
+            var query = await db.GetCollection<FoodGroup>(Collections.GetCollectionName<FoodGroup>()).FindAsync(fg => fg.Code == code);
             var group = await query.FirstOrDefaultAsync();
             if (group == null)
             {
                 return NotFound();
             }
-            var foodsQuery = await db.GetCollection<FoodItem>("foodItems").FindAsync(food => food.FoodGroupId == code);
+            var foodsQuery = await db.GetCollection<FoodItem>(Collections.GetCollectionName<FoodItem>()).FindAsync(food => food.FoodGroupId == code);
             var list = await foodsQuery.ToListAsync();
             return Ok(FoodGroupDetailJson.FromFoodGroupAndFoodItemList(group, list));
         }

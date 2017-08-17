@@ -11,7 +11,8 @@ namespace UsdaCosmos
         public IMongoDatabase ConnectAndGetDatabase(IConfiguration config)
         {
             var settings = new MongoClientSettings();
-            settings.Server = new MongoServerAddress(config["USDA_HOST"], 10255);
+            var port = int.Parse(config["USDA_PORT"]);
+            settings.Server = new MongoServerAddress(config["USDA_HOST"], port);
             settings.UseSsl = true;
             settings.SslSettings = new SslSettings();
             settings.SslSettings.EnabledSslProtocols = SslProtocols.Tls12;
