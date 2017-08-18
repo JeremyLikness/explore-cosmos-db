@@ -2,20 +2,12 @@ using UsdaCosmos;
 
 namespace UsdaCosmosJson 
 {
-    public class TopNutrientJson : NutrientJson 
+    public class TopNutrientJson
     {
-        public FoodItemNutrientJson[] FoodItems { get; set; }
+        public string Id { get; set; }
+        public string Description { get; set; }
 
-        public static TopNutrientJson FromTopNutrient(Nutrient nutrient)
-        {
-            return new TopNutrientJson
-            {
-                Id = nutrient.NutrientId,
-                AmountInHundredGrams = nutrient.AmountInHundredGrams,
-                Description = nutrient.Definition.Description,
-                UnitOfMeasure = nutrient.Definition.UnitOfMeasure,
-                SortOrder = nutrient.Definition.SortOrder
-            };
-        }
+        public string UnitOfMeasure { get; set; }
+        public FoodItemNutrientJson[] FoodItems { get; set; }
     }
 }

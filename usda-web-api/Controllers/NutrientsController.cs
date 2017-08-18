@@ -5,6 +5,7 @@ using System.Threading;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
+using MongoDB.Bson;
 using System.Linq;
 using UsdaCosmos;
 using UsdaCosmosJson;
@@ -45,14 +46,40 @@ namespace usda_web_api.Controllers
             }
             var client = new CosmosClient();
             var db = client.ConnectAndGetDatabase(this.configuration);
-            var query = db.GetCollection<FoodItem>(Collections.GetCollectionName<FoodItem>())
-                .Find(fi => fi.Nutrients.Any(n => n.Definition.TagName == tag))
-                .Project(Builders<FoodItem>.Projection.Include(fi=>fi.FoodId).Include(fi=>fi.ShortDescription).Include(fi=>fi.FoodGroupId)
-                    .Include(fi=>fi.Description).Exclude(fi=>fi.Weights).Include(fi => fi.Nutrients.Select(n => n.Definition.TagName == tag)))
-                .SortByDescending(fi => fi.Nutrients.First(n => n.Definition.TagName == tag).AmountInHundredGrams)
-                .Limit(20);
-            var queryList = await query.ToListAsync();
-            return Ok();
+            var coll = db.GetCollection<FoodItem>(Collections.GetCollectionName<FoodItem>());
+
+            var result = new TopNutrientJson();
+            var foodItems = new List<FoodItemNutrientJson>();
+            
+            var query = coll.Find(_=>true).Project(fi => new FoodItem {
+                FoodId=fi.FoodId,
+                FoodGroupId=fi.FoodGroupId,
+                ShortDescription=fi.ShortDescription,
+                Description=fi.Description,
+                Nutrients=fi.Nutrients.Where(n => n.Definition.TagName == tag).ToArray()
+            });
+
+            var first = true;
+            await query.ForEachAsync(fi => {
+                if (first) {
+                    result.Id = fi.Nutrients[0].NutrientId;
+                    result.Description = fi.Nutrients[0].Definition.Description;
+                    result.UnitOfMeasure = fi.Nutrients[0].Definition.UnitOfMeasure;
+                    first = false;
+                }
+                var foodItemNutrient = new FoodItemNutrientJson 
+                {
+                    Id = fi.FoodId,
+                    FoodGroupId = fi.FoodGroupId,
+                    Description = fi.Description,
+                    ShortDescription = fi.ShortDescription,
+                    AmountInHundredGrams = fi.Nutrients[0].AmountInHundredGrams
+                };
+                foodItems.Add(foodItemNutrient);
+            });
+
+            result.FoodItems = foodItems.OrderByDescending(fi => fi.AmountInHundredGrams).Take(20).ToArray();
+            return Ok(result);
         }
     }
 }

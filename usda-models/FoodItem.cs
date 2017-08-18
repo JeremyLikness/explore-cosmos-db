@@ -7,8 +7,6 @@ namespace UsdaCosmos
     public class FoodItem
     {
         [BsonId]
-        public ObjectId Id { get; set;}
-
         public string FoodId { get; set; }
         public string FoodGroupId { get; set; }
 

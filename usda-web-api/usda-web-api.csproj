@@ -16,4 +16,10 @@
     <ProjectReference Include="..\usda-models\usda-models.csproj" />
     <ProjectReference Include="..\usda-connector\usda-connector.csproj" />
   </ItemGroup>
+  <Target Name="CopyCustomContent" AfterTargets="AfterBuild">
+    <Copy SourceFiles="appsettings.json" DestinationFolder="$(OutDir)" />
+  </Target>
+  <Target Name="CopyCustomContentOnPublish" AfterTargets="Publish">
+    <Copy SourceFiles="appsettings.json" DestinationFolder="$(PublishDir)" />
+  </Target>
 </Project>
