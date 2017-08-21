@@ -52,9 +52,9 @@ namespace UsdaCosmos
                 {
                     FoodId = arr[0],
                     Sequence = arr[1],
-                    Amount = decimal.Parse(arr[2]),
+                    Amount = double.Parse(arr[2]),
                     Description = arr[3],
-                    WeightGrams = decimal.Parse(arr[4])
+                    WeightGrams = double.Parse(arr[4])
                 };
             });
 
@@ -85,7 +85,7 @@ namespace UsdaCosmos
                 {
                     FoodId = arr[0],
                     NutrientId = arr[1],
-                    AmountInHundredGrams = decimal.Parse(arr[2])
+                    AmountInHundredGrams = double.Parse(arr[2])
                 };
             });
 
@@ -172,6 +172,10 @@ namespace UsdaCosmos
                 foodLookup[foodId].Nutrients = nutrientList.ToArray();
             }
             Console.WriteLine("Correlated.");
+
+            Console.WriteLine("Converting nutrients into subdocuments...");
+            Parallel.ForEach(food, fi => fi.SerializeNutrients());
+            Console.WriteLine("Converted.");
 
             Console.WriteLine("Importing food items to CosmosDB (this may take several minutes)...");
             await importer.ImportFood(config, food);

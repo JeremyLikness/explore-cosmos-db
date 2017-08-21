@@ -1,4 +1,5 @@
 using UsdaCosmos;
+using MongoDB.Bson;
 
 namespace UsdaCosmosJson
 {
@@ -20,6 +21,17 @@ namespace UsdaCosmosJson
                 ShortDescription = foodItem.ShortDescription,
                 Description = foodItem.Description,
                 FoodGroupId = foodItem.FoodGroupId
+            };
+        }
+
+        public static FoodItemJson FromFoodItem(BsonDocument doc)
+        {
+            return new FoodItemJson
+            {
+                Id = doc["_id"].AsString,
+                ShortDescription = doc["ShortDescription"].AsString,
+                Description = doc["Description"].AsString,
+                FoodGroupId = doc["FoodGroupId"].AsString
             };
         }
     }

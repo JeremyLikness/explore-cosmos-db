@@ -21,6 +21,7 @@ namespace UsdaCosmosJson
 
         public static FoodItemDetailJson FromFoodItem(FoodItem item)
         {
+            item.DeserializeNutrients();
             return new FoodItemDetailJson
             {
                 Id = item.FoodId,

@@ -6,7 +6,7 @@ namespace UsdaCosmosJson
     {
         public string Id { get; set; }
         public string Description { get; set; }
-        public decimal AmountInHundredGrams { get; set; }
+        public double AmountInHundredGrams { get; set; }
         public string UnitOfMeasure { get; set; }
         public int SortOrder { get; set;}
 

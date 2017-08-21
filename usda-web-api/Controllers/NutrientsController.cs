@@ -46,39 +46,48 @@ namespace usda_web_api.Controllers
             }
             var client = new CosmosClient();
             var db = client.ConnectAndGetDatabase(this.configuration);
-            var coll = db.GetCollection<FoodItem>(Collections.GetCollectionName<FoodItem>());
+            var coll = db.GetCollection<BsonDocument>(Collections.GetCollectionName<FoodItem>());
 
             var result = new TopNutrientJson();
             var foodItems = new List<FoodItemNutrientJson>();
-            
-            var query = coll.Find(_=>true).Project(fi => new FoodItem {
-                FoodId=fi.FoodId,
-                FoodGroupId=fi.FoodGroupId,
-                ShortDescription=fi.ShortDescription,
-                Description=fi.Description,
-                Nutrients=fi.Nutrients.Where(n => n.Definition.TagName == tag).ToArray()
-            });
+
+            var sort = Builders<BsonDocument>.Sort.Descending($"NutrientDoc.nutrients.{tag}.amount");
+            var projection = Builders<BsonDocument>.Projection
+                .Include("_id")
+                .Include("FoodGroupId")
+                .Include("ShortDescription")
+                .Include("Description")
+                .Include($"NutrientDoc.nutrients.{tag}");
+
+            var query = coll.Find(_ => true)
+                .Project(projection)
+                .Sort(sort)
+                .Limit(20);
 
             var first = true;
-            await query.ForEachAsync(fi => {
-                if (first) {
-                    result.Id = fi.Nutrients[0].NutrientId;
-                    result.Description = fi.Nutrients[0].Definition.Description;
-                    result.UnitOfMeasure = fi.Nutrients[0].Definition.UnitOfMeasure;
+            await query.ForEachAsync(fi =>
+            {
+                var nutrient = fi["NutrientDoc"].AsBsonDocument["nutrients"].AsBsonDocument[tag].AsBsonDocument;
+                if (first)
+                {
+
+                    result.Id = nutrient["id"].AsString;
+                    result.Description = nutrient["description"].AsString;
+                    result.UnitOfMeasure = nutrient["uom"].AsString;
                     first = false;
                 }
-                var foodItemNutrient = new FoodItemNutrientJson 
+                var foodItemNutrient = new FoodItemNutrientJson
                 {
-                    Id = fi.FoodId,
-                    FoodGroupId = fi.FoodGroupId,
-                    Description = fi.Description,
-                    ShortDescription = fi.ShortDescription,
-                    AmountInHundredGrams = fi.Nutrients[0].AmountInHundredGrams
+                    Id = fi["_id"].AsString,
+                    FoodGroupId = fi["FoodGroupId"].AsString,
+                    Description = fi["Description"].AsString,
+                    ShortDescription = fi["ShortDescription"].AsString,
+                    AmountInHundredGrams = nutrient["amount"].AsDouble
                 };
                 foodItems.Add(foodItemNutrient);
             });
 
-            result.FoodItems = foodItems.OrderByDescending(fi => fi.AmountInHundredGrams).Take(20).ToArray();
+            result.FoodItems = foodItems.ToArray();
             return Ok(result);
         }
     }

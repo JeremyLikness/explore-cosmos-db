@@ -50,7 +50,8 @@ namespace usda_web_api.Controllers
             {
                 return NotFound();
             }
-            var foodsQuery = await db.GetCollection<FoodItem>(Collections.GetCollectionName<FoodItem>()).FindAsync(food => food.FoodGroupId == code);
+            var foodsQuery = await db.GetCollection<FoodItem>(Collections.GetCollectionName<FoodItem>()).
+                FindAsync(food => food.FoodGroupId == code);
             var list = await foodsQuery.ToListAsync();
             return Ok(FoodGroupDetailJson.FromFoodGroupAndFoodItemList(group, list));
         }
