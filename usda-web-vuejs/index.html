@@ -14,6 +14,9 @@
 <body>
     <h1>CosmosDB USDA Example</h1>
     <div id="app">
+        <b-alert variant="danger" dismissible :show="alertText && showAlert" @dismissed="showAlert=false">
+            {{ alertText }}
+        </b-alert>
         <div v-if="busy" style="position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0, 0.6);">
             <br/><br/><br/>
             <h1 class="text-center" style="vertical-align: middle; color: white;">Loading...</h1>
@@ -50,10 +53,31 @@
                 <div v-if="foodItems.length">
                     <p>Returned: {{foodItems.length}} food item(s).</p>
                     <div style="max-height: 400px; overflow-y: scroll;">
-                        <p v-for="food in foodItems">{{food.description}}</p>
+                        <p style="cursor:hand" v-for="food in foodItems" v-on:click="getFoodItem(food.id)">{{food.description}}</p>
                     </div>
                 </div>
             </p>
+        </b-card>
+        <b-card v-if="foodItem" v-bind:title="foodItem.description" style="float: left;" class="mb-2">
+            <p>Choose amount:</p>
+            <select v-model="amount">
+                <option v-for="amnt in amounts" v-bind:value="amnt">
+                    {{ amnt }}
+                </option>
+            </select>
+            <p>Choose Unit of Measure:</p>
+            <select v-model="weightSequence">
+                <option v-for="weight in foodItem.weights" v-bind:value="weight.sequence">
+                    {{weight.description}}
+                </option>
+            </select>
+            <b-list-group flush>
+                <b-list-group-item v-for="nutrient in foodItem.nutrients" :key="nutrient.id">
+                    {{nutrient.description}}
+                    {{(((amount * weight.weightGrams)/100.0) * nutrient.amountInHundredGrams).toFixed(3)}}
+                    {{nutrient.unitOfMeasure}}
+                </b-list-group-item>
+            </b-list-group>
         </b-card>
     </div>
     <script src="cosmos.js"></script>

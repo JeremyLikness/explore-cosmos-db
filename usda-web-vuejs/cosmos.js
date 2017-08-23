@@ -12,7 +12,7 @@ const makeApi = (path, pathArgs, query) => {
         }
         result = `${result}?${queries.join('&')}`;
     }
-    return result; 
+    return result;
 }
 
 var app = new Vue({
@@ -23,15 +23,22 @@ var app = new Vue({
         this.fetchNutrients();
     },
     data: {
+        weightSequence: 0,
+        weight: null,
+        amount: 1,
+        amounts: [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10],
         busyCount: 0,
         busy: false,
-        foodGroups: [{code: '', description: 'All'}],
+        showAlert: false,
+        alertText: null,
+        foodGroups: [{ code: '', description: 'All' }],
         foodItems: [],
         selectedGroupCode: '',
         selectedGroupDescription: 'All',
         searchText: '',
         selectedNutrient: 'None',
-        nutrients: []
+        nutrients: [],
+        foodItem: null
     },
     watch: {
         'selectedGroupCode': function () {
@@ -42,27 +49,34 @@ var app = new Vue({
         },
         'busyCount': function () {
             this.busy = this.busyCount > 0;
+        },
+        'weightSequence': function () {
+            this.weight = this.foodItem.weights.find(w => w.sequence === this.weightSequence);
         }
     },
     methods: {
-        fetchGroups: function() {
+        fetchGroups: function () {
             var _this = this;
             this.busyCount++;
-            $.get(makeApi('foodGroups'), function(data) {
+            $.get(makeApi('foodGroups')).done(function (data) {
                 _this.foodGroups = _this.foodGroups.concat(data);
-                _this.busyCount--;
-            });
+            }).fail(function (err) {
+                _this.showAlert = true;
+                _this.alertText = err;
+            }).always(function () { _this.busyCount--; });
         },
-        fetchNutrients: function() {
+        fetchNutrients: function () {
             var _this = this;
             this.busyCount++;
-            $.get(makeApi('nutrients'), function(data) {
+            $.get(makeApi('nutrients')).done(function (data) {
                 _this.nutrients = data;
                 _this.selectedNutrient = _this.nutrients[0].tagName;
-                _this.busyCount--;
-            });
+            }).fail(function (err) {
+                _this.showAlert = true;
+                _this.alertText = err;
+            }).always(function () { _this.busyCount--; });
         },
-        searchFoods: function() {
+        searchFoods: function () {
             var _this = this;
             this.busyCount++;
             var query = [];
@@ -72,10 +86,13 @@ var app = new Vue({
             if (this.searchText !== '') {
                 query.push(['search', this.searchText]);
             }
-            $.get(makeApi('foods','',query), function(data) {
+            $.get(makeApi('foods', '', query)).done(function (data) {
                 _this.foodItems = data;
-                _this.busyCount--;
-            });
+            }).fail(function (err) {
+                _this.showAlert = true;
+                _this.alertText = err;
+
+            }).always(function () { _this.busyCount--; });
         },
         getTopFoods: function () {
             var _this = this;
@@ -84,10 +101,24 @@ var app = new Vue({
             if (this.selectedGroupCode !== '') {
                 query.push(['groupId', this.selectedGroupCode]);
             }
-            $.get(makeApi('nutrients', ['top', this.selectedNutrient], query), function (data) {
+            $.get(makeApi('nutrients', ['top', this.selectedNutrient], query)).done(function (data) {
                 _this.foodItems = data.foodItems;
-                _this.busyCount--;
-            });
+            }).fail(function (err) {
+                _this.showAlert = true;
+                _this.alertText = err;
+            }).always(function () { _this.busyCount--; });
+        },
+        getFoodItem: function (foodId) {
+            var _this = this;
+            this.busyCount++;
+            $.get(makeApi('foods', [foodId])).done(function (data) {
+                _this.foodItem = data;
+                _this.weightSequence = _this.foodItem.weights[0].sequence;
+                _this.amount = 1;
+            }).fail(function (err) {
+                _this.showAlert = true;
+                _this.alertText = err;
+            }).always(function () { _this.busyCount--; });
         }
     }
 
