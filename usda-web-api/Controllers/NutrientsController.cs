@@ -37,8 +37,12 @@ namespace usda_web_api.Controllers
         // GET api/nutrients/top/ENERGY_KCAL
         // I am currently broken and being worked on
         [HttpGet("top/{tag}")]
-        public async Task<IActionResult> GetTopFoodsAsync(string tag)
+        public async Task<IActionResult> GetTopFoodsAsync(string tag, [FromQuery]string groupId = null)
         {
+            if (groupId != null)
+            {
+                groupId = groupId.Trim();
+            }
             tag = tag.Trim();
             if (string.IsNullOrEmpty(tag))
             {
@@ -59,10 +63,23 @@ namespace usda_web_api.Controllers
                 .Include("Description")
                 .Include($"NutrientDoc.nutrients.{tag}");
 
-            var query = coll.Find(_ => true)
-                .Project(projection)
-                .Sort(sort)
-                .Limit(20);
+            IFindFluent<BsonDocument, BsonDocument> query;
+
+            if (string.IsNullOrEmpty(groupId))
+            {
+                query = coll.Find(_ => true)
+                    .Project(projection)
+                    .Sort(sort)
+                    .Limit(100);
+            }
+            else
+            {
+                query = coll.Find(new BsonDocument {
+                    {"FoodGroupId", groupId}
+                }).Project(projection)
+                    .Sort(sort)
+                    .Limit(100);
+            }
 
             var first = true;
             await query.ForEachAsync(fi =>

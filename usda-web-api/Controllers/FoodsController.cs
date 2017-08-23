@@ -5,6 +5,7 @@ using System.Threading;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
+using MongoDB.Bson;
 using System.Linq;
 using UsdaCosmos;
 using UsdaCosmosJson;
@@ -23,10 +24,17 @@ namespace usda_web_api.Controllers
 
         // GET api/foods
         [HttpGet]
-        public async Task<IEnumerable<FoodItemJson>> GetAsync([FromQuery] string groupId = null)
+        public async Task<IEnumerable<FoodItemJson>> GetAsync([FromQuery] string groupId = null, [FromQuery] string search = null)
         {
-            groupId = groupId.Trim();
-            if (string.IsNullOrWhiteSpace(groupId))
+            if (groupId != null) 
+            {
+                groupId = groupId.Trim();
+            }
+            if (search != null)
+            {
+                search = search.Trim();
+            }
+            if (string.IsNullOrWhiteSpace(groupId) && string.IsNullOrWhiteSpace(search))
             {
                 return Enumerable.Empty<FoodItemJson>();
             }
@@ -34,11 +42,23 @@ namespace usda_web_api.Controllers
             var db = client.ConnectAndGetDatabase(this.configuration);
             var projection = Builders<FoodItem>.Projection.Include(fi => fi.FoodId).Include(fi => fi.FoodGroupId)
                 .Include(fi => fi.Description).Include(fi => fi.ShortDescription);
-            var query = db.GetCollection<FoodItem>(Collections.GetCollectionName<FoodItem>())
-                .Find(fi => fi.FoodGroupId == groupId)
-                .Project(projection);
+            var query = db.GetCollection<FoodItem>(Collections.GetCollectionName<FoodItem>());
+            IFindFluent<FoodItem, FoodItem> findFluent; 
+            if (string.IsNullOrWhiteSpace(groupId))
+            {
+                findFluent = query.Find(fi => fi.Description.Contains(search));
+            }
+            else if (string.IsNullOrWhiteSpace(search))
+            {
+                findFluent = query.Find(fi => fi.FoodGroupId == groupId);
+            }
+            else 
+            {
+                findFluent = query.Find(fi => fi.FoodGroupId == groupId && fi.Description.Contains(search));
+            }
+            var projectedQuery = findFluent.Limit(100).Project(projection);
             var list = new List<FoodItemJson>();
-            await query.ForEachAsync(fi => list.Add(FoodItemJson.FromFoodItem(fi)));
+            await projectedQuery.ForEachAsync(fi => list.Add(FoodItemJson.FromFoodItem(fi)));
             return list.OrderBy(fi => fi.Description);
           }
 

@@ -1,0 +1,62 @@
+<html>
+
+<head>
+    <title>CosmosDB USDA Example</title>
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap@next/dist/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
+    <script src="https://unpkg.com/tether@latest/dist/js/tether.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
+</head>
+
+<body>
+    <h1>CosmosDB USDA Example</h1>
+    <div id="app">
+        <div v-if="busy" style="position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0, 0.6);">
+            <br/><br/><br/>
+            <h1 class="text-center" style="vertical-align: middle; color: white;">Loading...</h1>
+        </div>
+        <b-card title="Select Food Group" style="max-width: 20rem; float:left;" class="mb-2">
+            <p class="card-text">
+                <select v-model="selectedGroupCode">
+                        <option v-for="option in foodGroups" v-bind:value="option.code">
+                            {{ option.description }}
+                        </option>
+                    </select>
+                <div>Selected: <strong>{{ selectedGroupDescription }}</strong></div>
+                <b-button :disabled="busy" @click="searchFoods">Filter</b-button>
+            </p>
+        </b-card>
+        <b-card title="Search Foods" style="max-width: 20rem; float:left;" class="mb-2">
+            <p class="card-text">
+                <p>Enter search text:</p>
+                <b-form-input v-model="searchText" type="text" placeholder="Enter search text"></b-form-input>
+                <b-button :disabled="busy" @click="searchFoods">Search</b-button>
+                <p class="text-center">-- OR --</p>
+                <p>Select a nutrient:</p>
+                <select v-model="selectedNutrient">
+                        <option v-for="nutrient in nutrients" v-bind:value="nutrient.tagName">
+                            {{ nutrient.description }}
+                        </option>
+                    </select>
+                <b-button :disabled="busy" @click="getTopFoods">Get Top Foods</b-button>
+            </p>
+        </b-card>
+        <b-card title="Food List" style="max-width: 20rem; float:left;" class="mb-2">
+            <p class="card-text">
+                <div v-if="foodItems.length === 0">(no foods selected)</div>
+                <div v-if="foodItems.length">
+                    <p>Returned: {{foodItems.length}} food item(s).</p>
+                    <div style="max-height: 400px; overflow-y: scroll;">
+                        <p v-for="food in foodItems">{{food.description}}</p>
+                    </div>
+                </div>
+            </p>
+        </b-card>
+    </div>
+    <script src="cosmos.js"></script>
+</body>
+
+</html>
