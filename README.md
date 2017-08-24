@@ -1,6 +1,6 @@
 # Explore the Cosmos (DB) Cross-Platform
 
-This repository contains cross-platform .NET Core 2.0 code to populate and access an [Azure Cosmos DB](https://docs.microsoft.com/azure/cosmos-db/introduction) database. It will actually work with any Mongo database. You have options to configure the end point, host, username, password, and database.
+This repository contains cross-platform .NET Core 2.0 code to populate and access an [Azure Cosmos DB](https://docs.microsoft.com/azure/cosmos-db/introduction?utm_source=jeliknes&utm_medium=github) database. It will actually work with any Mongo database. You have options to configure the end point, host, username, password, and database.
 
 > **NOTICE!** This is a work in progress and is not final.
 
