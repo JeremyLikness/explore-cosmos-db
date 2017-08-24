@@ -1,5 +1,6 @@
 const apiRoot = "http://localhost:5000/api/";
 
+// helper method to make it easier to build url paths
 const makeApi = (path, pathArgs, query) => {
     var result = `${apiRoot}${path}/`;
     if (pathArgs && pathArgs.length) {
@@ -16,45 +17,59 @@ const makeApi = (path, pathArgs, query) => {
 }
 
 var app = new Vue({
+
     el: '#app',
+
     created: function () {
         this.selectedGroup = this.foodGroups[0];
         this.fetchGroups();
         this.fetchNutrients();
     },
+
     data: {
-        weightSequence: 0,
-        weight: null,
-        amount: 1,
+        weightSequence: 0, // weight selection fofr food item
+        weight: null, // weight object to calculate amounts
+        amount: 1, // amount selected
         amounts: [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10],
-        busyCount: 0,
-        busy: false,
-        showAlert: false,
-        alertText: null,
-        foodGroups: [{ code: '', description: 'All' }],
-        foodItems: [],
-        selectedGroupCode: '',
-        selectedGroupDescription: 'All',
-        searchText: '',
-        selectedNutrient: 'None',
-        nutrients: [],
-        foodItem: null
+        busyCount: 0, // used to show loading 
+        busy: false, // updated as busyCount changes
+        showAlert: false, // true when an error occurred
+        alertText: null, // json of the error (not very informative as is)
+        foodGroups: [{ code: '', description: 'All' }], // list of food groups
+        foodItems: [], // list of food items
+        selectedGroupCode: '', // selected group code (id)
+        selectedGroupDescription: 'All', // description for selected group
+        searchText: '', // search text 
+        selectedNutrient: 'None', // selected nutrient tag
+        nutrients: [], // nutrient list
+        foodItem: null  // selected food item
     },
+
     watch: {
+
+        // update description when code changes
         'selectedGroupCode': function () {
             var group = this.foodGroups.find(fg => fg.code === this.selectedGroupCode);
             if (group) {
                 this.selectedGroupDescription = group.description;
             }
         },
+
+        // set busy flag when count of pending asynchronous operations changes
+        // could change busy to a computed field too 
         'busyCount': function () {
             this.busy = this.busyCount > 0;
         },
+
+        // sequence of weights to use for computing amounts
         'weightSequence': function () {
             this.weight = this.foodItem.weights.find(w => w.sequence === this.weightSequence);
         }
     },
+
     methods: {
+
+        // get the group list 
         fetchGroups: function () {
             var _this = this;
             this.busyCount++;
@@ -65,6 +80,8 @@ var app = new Vue({
                 _this.alertText = err;
             }).always(function () { _this.busyCount--; });
         },
+
+        // get the nutrients list 
         fetchNutrients: function () {
             var _this = this;
             this.busyCount++;
@@ -76,6 +93,8 @@ var app = new Vue({
                 _this.alertText = err;
             }).always(function () { _this.busyCount--; });
         },
+
+        // search foods by text and/or group 
         searchFoods: function () {
             var _this = this;
             this.busyCount++;
@@ -94,6 +113,8 @@ var app = new Vue({
 
             }).always(function () { _this.busyCount--; });
         },
+
+        // get top foods by amount of nutrient specified, possibly scoped to group
         getTopFoods: function () {
             var _this = this;
             this.busyCount++;
@@ -108,6 +129,8 @@ var app = new Vue({
                 _this.alertText = err;
             }).always(function () { _this.busyCount--; });
         },
+
+        // get an individual food item
         getFoodItem: function (foodId) {
             var _this = this;
             this.busyCount++;

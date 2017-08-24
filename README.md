@@ -38,3 +38,10 @@ The following projects exist and reference each other through relative paths:
 * `usda-importer`: code to pull files from the USDA database site, parse them, and insert them into the database
 * `usda-models`: common models for the data
 * `usda-web-api`: Web API interface to browse the data
+* `usda-web-vuejs`: Static webiste to explore the API using HTML, JavaScript, jQuery and Vue.js
+
+## Containers
+
+You can package the application with several containers. The `Dockerfile` at the root of the project will build a .NET Core 2.0 container that is ready to run the web API endpoint. It does require that you pass the right environment variables to connect to the CosmosDB instance.
+
+The `Dockerfile` in the root of `usda-web-vuejs` will package a tiny web server with the HTML and JavaScript necessary to run the explorer app. It is important that you update the correct URL in the `cosmos.js` file.

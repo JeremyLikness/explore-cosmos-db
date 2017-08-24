@@ -73,9 +73,7 @@
             </select>
             <b-list-group flush>
                 <b-list-group-item v-for="nutrient in foodItem.nutrients" :key="nutrient.id">
-                    {{nutrient.description}}
-                    {{(((amount * weight.weightGrams)/100.0) * nutrient.amountInHundredGrams).toFixed(3)}}
-                    {{nutrient.unitOfMeasure}}
+                    {{nutrient.description}} {{(((amount * weight.weightGrams)/100.0) * nutrient.amountInHundredGrams).toFixed(3)}} {{nutrient.unitOfMeasure}}
                 </b-list-group-item>
             </b-list-group>
         </b-card>
