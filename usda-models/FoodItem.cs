@@ -44,7 +44,7 @@ namespace UsdaCosmos
                 {
                     FoodId = this.FoodId,
                     NutrientId = element.Value.AsBsonDocument["id"].AsString,
-                    AmountInHundredGrams = element.Value.AsBsonDocument["amount"].AsDouble,
+                    AmountInHundredGrams = element.Value.AsBsonDocument["amount"].ToDouble(),
                     Definition = new NutrientDefinition
                     {
                         NutrientId = element.Value.AsBsonDocument["id"].AsString,
