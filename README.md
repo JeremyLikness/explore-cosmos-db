@@ -2,8 +2,6 @@
 
 This repository contains cross-platform .NET Core 2.0 code to populate and access an [Azure Cosmos DB](https://goo.gl/7vXu26) database. It will actually work with any Mongo database. You have options to configure the end point, host, username, password, and database.
 
-> **NOTICE!** This is a work in progress and is not final.
-
 > **DISCLAIMER:**
 > Use of Cosmos DB will incur charges against your Azure account. Please be aware of these charges and understand any activity against the Azure instance will result in fees. You can alternatively use a local emulator or connect to a Mongo database.
 
