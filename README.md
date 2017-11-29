@@ -5,6 +5,8 @@ This repository contains cross-platform .NET Core 2.0 code to populate and acces
 > **DISCLAIMER:**
 > Use of Cosmos DB will incur charges against your Azure account. Please be aware of these charges and understand any activity against the Azure instance will result in fees. You can alternatively use a local emulator or connect to a Mongo database.
 
+[Watch the Channel 9 Video Walkthrough](https://jlik.me/b34)
+
 ## Configuration
 
 The applications that require configuration all prioritize, in order, environment variables then `appsettings.json`. This allows you to set the variables in the environment, or, if you are hosting the app, use the environment and/or app settings feature on the host to configure secrets. The variables and their explanation follows:
