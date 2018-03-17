@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  usda-web-api:
+    image: usdawebapi
+    build:
+      context: .
+      dockerfile: usda-web-api/Dockerfile

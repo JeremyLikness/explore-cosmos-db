@@ -12,6 +12,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "usda-console-test", "usda-c
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "usda-web-api", "usda-web-api\usda-web-api.csproj", "{9C8DEDC7-AF2A-48A9-A5F5-3C2A2D9AD07E}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{5A6EBE72-D98E-4D32-B5C6-FC0A61501F6D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -82,6 +84,18 @@ Global
 		{9C8DEDC7-AF2A-48A9-A5F5-3C2A2D9AD07E}.Release|x64.Build.0 = Release|Any CPU
 		{9C8DEDC7-AF2A-48A9-A5F5-3C2A2D9AD07E}.Release|x86.ActiveCfg = Release|Any CPU
 		{9C8DEDC7-AF2A-48A9-A5F5-3C2A2D9AD07E}.Release|x86.Build.0 = Release|Any CPU
+		{5A6EBE72-D98E-4D32-B5C6-FC0A61501F6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A6EBE72-D98E-4D32-B5C6-FC0A61501F6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A6EBE72-D98E-4D32-B5C6-FC0A61501F6D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5A6EBE72-D98E-4D32-B5C6-FC0A61501F6D}.Debug|x64.Build.0 = Debug|Any CPU
+		{5A6EBE72-D98E-4D32-B5C6-FC0A61501F6D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5A6EBE72-D98E-4D32-B5C6-FC0A61501F6D}.Debug|x86.Build.0 = Debug|Any CPU
+		{5A6EBE72-D98E-4D32-B5C6-FC0A61501F6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A6EBE72-D98E-4D32-B5C6-FC0A61501F6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A6EBE72-D98E-4D32-B5C6-FC0A61501F6D}.Release|x64.ActiveCfg = Release|Any CPU
+		{5A6EBE72-D98E-4D32-B5C6-FC0A61501F6D}.Release|x64.Build.0 = Release|Any CPU
+		{5A6EBE72-D98E-4D32-B5C6-FC0A61501F6D}.Release|x86.ActiveCfg = Release|Any CPU
+		{5A6EBE72-D98E-4D32-B5C6-FC0A61501F6D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

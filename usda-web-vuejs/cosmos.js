@@ -1,4 +1,4 @@
-const apiRoot = "http://localhost:5000/api/";
+const apiRoot = "http://52.224.125.133/api/";
 
 // helper method to make it easier to build url paths
 const makeApi = (path, pathArgs, query) => {
