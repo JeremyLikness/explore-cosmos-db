@@ -39,6 +39,8 @@ The following projects exist and reference each other through relative paths:
 * `usda-models`: common models for the data
 * `usda-web-api`: Web API interface to browse the data
 * `usda-web-vuejs`: Static webiste to explore the API using HTML, JavaScript, jQuery and Vue.js
+* `usda-functions`: Azure Functions implementation of Food Groups end point 
+* `usda-web-gropus`: simple app that uses blob storage with serverless to render images
 
 ## Containers
 
@@ -46,9 +48,15 @@ You can package the application with several containers. The `Dockerfile` at the
 
 The `Dockerfile` in the root of `usda-web-vuejs` will package a tiny web server with the HTML and JavaScript necessary to run the explorer app. It is important that you update the correct URL in the `cosmos.js` file.
 
+These exist for `usda-web-groups` and `usda-web-api` as well. Be sure to run the Web API from the root of the project:
+
+`docker build -t usda-web-api -f usda-web-api/Dockerfile .`
+
 ## Full walkthrough (requires Azure and Docker)
 
 This walkthrough assumes you have a valid Azure account with credits, and either have the Azure CLI installed locally or will use the built-in Azure Cloud Shell. You should also have a Docker host available, either locally or on a virtual machine. These instructions assume a Bash shell. For Windows, they will work on both Ubuntu on Windows as well as git-bash.
+
+[Get started with Azure Cosmos DB for free](https://aka.ms/get-cosmos)
 
 Clone this repository:
 
@@ -137,3 +145,9 @@ Browse to [http://localhost:80](http://localhost:80) to use the app.
 For example, to find a list of the foods in the "vegetable" category that have the highest protein content, select "Vegetables and vegetable products" in the group dropdown, "Protein" in the nutrient dropdown and click "Get Top Foods." When the Food List returns, click on a food item to see the nutrient breakdown.
 
 Read [Docker Containers at Scale with Azure Web App on Linux](https://blog.jeremylikness.com/docker-containers-at-scale-with-azure-web-app-on-linux-da22c03d4ad7) to learn how to deploy your containers to Azure. Alternatively, you may deploy them individually using [Azure Container Instances](https://goo.gl/EBjBLg) (be sure to update the URL in the `cosmos.js` script file before deploying the app).
+
+## Bonus Round 
+
+For the bonus round, upload images of your choice (I recommend public domain images from a service like [PixaBay](https://pixabay.com)) into blob storage under a path images/food with the group code, i.e. `0100.jpg` for group `0100`. Deploy the Azure function and set the application settings to point to your Cosmos DB database (use the same variables you set for your local environment). Then build and run the `usda-web-groups` Docker container to see groups with images.
+
+[@JeremyLikness](https://twitter.com/jeremylikness)
