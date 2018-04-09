@@ -122,7 +122,7 @@ docker run -d -p 5000:80 -e USDA_USER=$USDA_USER \
     -e USDA_PASSWORD=$USDA_PASSWORD usda-api
 ```
 
-Browse to [http://localhost:5000/api/foodGroups](http://localhost:5000/api/foodGroups) and confirm you receive the list of food groups. This means it is successfully accessing the database.
+Browse to [http://localhost:5000/api/foodGroups](http://localhost:5000/api/foodGroups) (or whatever port is configured for you) and confirm you receive the list of food groups. This means it is successfully accessing the database.
 
 Navigate to the directory of the web app and build the BusyBox container:
 
@@ -143,7 +143,7 @@ Browse to [http://localhost:80](http://localhost:80) to use the app.
 
 For example, to find a list of the foods in the "vegetable" category that have the highest protein content, select "Vegetables and vegetable products" in the group dropdown, "Protein" in the nutrient dropdown and click "Get Top Foods." When the Food List returns, click on a food item to see the nutrient breakdown.
 
-Read [Docker Containers at Scale with Azure Web App on Linux](https://blog.jeremylikness.com/docker-containers-at-scale-with-azure-web-app-on-linux-da22c03d4ad7) to learn how to deploy your containers to Azure. Alternatively, you may deploy them individually using [Azure Container Instances](https://goo.gl/EBjBLg) (be sure to update the URL in the `cosmos.js` script file before deploying the app).
+Read [Docker Management and Kubernetes Orchestration](https://blog.jeremylikness.com/docker-management-and-kubernetes-orchestration-2b7baf60a704) to learn how to deploy your containers to Azure. Alternatively, you may deploy them individually using [Azure Container Instances](https://goo.gl/EBjBLg) (be sure to update the URL in the `cosmos.js` script file before deploying the app).
 
 ## Bonus Round 
 
