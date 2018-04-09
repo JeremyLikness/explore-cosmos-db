@@ -98,11 +98,10 @@ dotnet restore
 dotnet build -c Release
 ```
 
-Navigate to the output directory and run the importer tool. This may take several minutes to complete.
+Run the importer tool. This may take several minutes to complete.
 
 ```bash
-cd bin/Release/netcoreapp2.0/
-dotnet usda-importer.dll
+dotnet run
 ```
 
 You can execute the remaining steps while the app is importing. Open a new shell and set the environment variables with your credentials.
