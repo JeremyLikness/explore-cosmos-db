@@ -6,6 +6,7 @@ using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.EnvironmentVariables;
 using Microsoft.Extensions.Configuration.Json;
+using System.Globalization;
 
 namespace UsdaCosmos
 {
@@ -52,9 +53,9 @@ namespace UsdaCosmos
                 {
                     FoodId = arr[0],
                     Sequence = arr[1],
-                    Amount = double.Parse(arr[2]),
+                    Amount = double.Parse(arr[2], CultureInfo.InvariantCulture),
                     Description = arr[3],
-                    WeightGrams = double.Parse(arr[4])
+                    WeightGrams = double.Parse(arr[4], CultureInfo.InvariantCulture)
                 };
             });
 
@@ -69,7 +70,7 @@ namespace UsdaCosmos
                     UnitOfMeasure = arr[1],
                     TagName = arr[2],
                     Description = arr[3],
-                    SortOrder = int.Parse(arr[5])
+                    SortOrder = int.Parse(arr[5], CultureInfo.InvariantCulture)
                 };
             });
 
@@ -85,7 +86,7 @@ namespace UsdaCosmos
                 {
                     FoodId = arr[0],
                     NutrientId = arr[1],
-                    AmountInHundredGrams = double.Parse(arr[2])
+                    AmountInHundredGrams = double.Parse(arr[2], CultureInfo.InvariantCulture)
                 };
             });
 
