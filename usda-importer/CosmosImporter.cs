@@ -4,6 +4,7 @@ using System.Security.Authentication;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using MongoDB.Bson;
 
 namespace UsdaCosmos
 {
@@ -17,8 +18,19 @@ namespace UsdaCosmos
             if (db.GetCollection<T>(collectionName) != null)
             {
                 Console.WriteLine($"Dropping and re-creating collection {collectionName}");
-                db.DropCollection(collectionName);
-                db.CreateCollection(collectionName);
+                await db.DropCollectionAsync(collectionName);
+                if (collectionName == Collections.FoodItems) {
+                    Console.WriteLine("Creating partition key for food items.");
+                    var partition = new BsonDocument {
+                        {"shardCollection", $"{db.DatabaseNamespace.DatabaseName}.{collectionName}"},
+                        {"key", new BsonDocument {{"FoodGroupId", "hashed"}}}
+                    };
+                    var command = new BsonDocumentCommand<BsonDocument>(partition);
+                    await db.RunCommandAsync(command);
+                }
+                else {
+                    await db.CreateCollectionAsync(collectionName);
+                }
             }
             var itemCount = 0;
             var collection = db.GetCollection<T>(collectionName);
