@@ -19,9 +19,30 @@ The applications that require configuration all prioritize, in order, environmen
 
 The connector uses SSL and assumes the credential is `SCRAM-SHA-1`.
 
+Examples:
+
+```bash
+// BASH
+export USDA_PORT=1234
+```
+
+```cmd
+// Windows Command Line
+set USDA_PORT=1234
+```
+
 ## Database setup: `usda-importer`
 
 Use this console tool to configure the collections and import data for the demo. It can take several minutes to run. The data is imported from the SR28 version of the [USDA National Nutrient Database for Standard Reference](https://www.ars.usda.gov/northeast-area/beltsville-md/beltsville-human-nutrition-research-center/nutrient-data-laboratory/docs/usda-national-nutrient-database-for-standard-reference/). The URLs for the data files are configured in `appsettings.json`.
+
+To run this or any of the projects, navigate to the directory and use the `dotnet run` command. For example:
+
+```bash
+cd usda-importer
+dotnet run
+```
+
+Be sure to set the environment variables and/or update `appsettings.json`!
 
 The importer will load the data files, parse them into entities, correlate related entities, drop existing collections, create new collections, and import the data. Three collections are created:
 
@@ -40,7 +61,7 @@ The following projects exist and reference each other through relative paths:
 * `usda-web-api`: Web API interface to browse the data
 * `usda-web-vuejs`: Static webiste to explore the API using HTML, JavaScript, jQuery and Vue.js
 * `usda-functions`: Azure Functions implementation of Food Groups end point 
-* `usda-web-gropus`: simple app that uses blob storage with serverless to render images
+* `usda-web-groups`: simple app that uses blob storage with serverless to render images
 
 ## Containers
 
